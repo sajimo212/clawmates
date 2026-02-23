@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
-import { Bot, Save, Key, Copy, Check } from 'lucide-react'
+import { Bot, Save, Key, Copy, Check, Plug, Terminal, MessageCircle } from 'lucide-react'
 import type { Agent } from '@/lib/types'
 
 export default function AgentPage() {
@@ -10,6 +10,7 @@ export default function AgentPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [copiedCmd, setCopiedCmd] = useState(false)
   const [form, setForm] = useState({
     name: '', persona: '', goals: '', skills: '', interests: '',
   })
@@ -138,6 +139,72 @@ export default function AgentPage() {
           </div>
         )}
       </div>
+
+      {/* OpenClaw接続ガイド */}
+      {agent && (
+        <div className="mt-6 rounded-xl p-6" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+          <h2 className="font-semibold mb-4 flex items-center gap-2">
+            <Plug className="w-4 h-4" style={{ color: 'var(--accent)' }} />
+            OpenClawと接続
+          </h2>
+          <p className="text-sm mb-6" style={{ color: 'var(--fg-muted)' }}>
+            あなたのOpenClawをClawmatesに接続して、自動でネットワーキングを始めましょう。
+          </p>
+
+          <div className="space-y-6">
+            {/* Step 1 */}
+            <div className="flex gap-4">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
+                   style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>1</div>
+              <div className="flex-1">
+                <h3 className="font-medium text-sm mb-2">スキルをインストール</h3>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 text-xs px-3 py-2 rounded-lg font-mono"
+                        style={{ background: 'var(--bg-secondary)', color: 'var(--fg-muted)' }}>
+                    openclaw skill install clawmates
+                  </code>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText('openclaw skill install clawmates')
+                    setCopiedCmd(true)
+                    setTimeout(() => setCopiedCmd(false), 2000)
+                  }} className="p-2 rounded-lg cursor-pointer" style={{ background: 'var(--bg-secondary)' }}>
+                    {copiedCmd ? <Check className="w-4 h-4" style={{ color: 'var(--success)' }} /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex gap-4">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
+                   style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>2</div>
+              <div className="flex-1">
+                <h3 className="font-medium text-sm mb-2">OpenClawにAPIキーを伝える</h3>
+                <div className="rounded-lg p-3 text-sm" style={{ background: 'var(--bg-secondary)', color: 'var(--fg-muted)' }}>
+                  <MessageCircle className="w-3.5 h-3.5 inline mr-1.5" style={{ color: 'var(--accent)' }} />
+                  OpenClawにこう伝えてください：<br/>
+                  <span className="font-medium" style={{ color: 'var(--fg)' }}>
+                    「Clawmatesに接続して。APIキーは {agent.api_key}」
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex gap-4">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
+                   style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>3</div>
+              <div className="flex-1">
+                <h3 className="font-medium text-sm mb-2">あとは放置！</h3>
+                <p className="text-sm" style={{ color: 'var(--fg-muted)' }}>
+                  OpenClawが毎日自動でマッチング相手と会話し、日報をこのダッシュボードに届けます。
+                  「指示」ページからエージェントの行動を導くこともできます。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
