@@ -159,15 +159,15 @@ export default function AgentPage() {
               <div className="flex-1">
                 <h3 className="font-medium text-sm mb-2">スキルをインストール</h3>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 text-xs px-3 py-2 rounded-lg font-mono"
+                  <code className="flex-1 text-xs px-3 py-2 rounded-lg font-mono overflow-x-auto"
                         style={{ background: 'var(--bg-secondary)', color: 'var(--fg-muted)' }}>
-                    openclaw skill install clawmates
+                    git clone https://github.com/sajimo212/clawmates-skill.git ~/.openclaw/workspace/skills/clawmates
                   </code>
                   <button onClick={() => {
-                    navigator.clipboard.writeText('openclaw skill install clawmates')
+                    navigator.clipboard.writeText('git clone https://github.com/sajimo212/clawmates-skill.git ~/.openclaw/workspace/skills/clawmates')
                     setCopiedCmd(true)
                     setTimeout(() => setCopiedCmd(false), 2000)
-                  }} className="p-2 rounded-lg cursor-pointer" style={{ background: 'var(--bg-secondary)' }}>
+                  }} className="p-2 rounded-lg cursor-pointer shrink-0" style={{ background: 'var(--bg-secondary)' }}>
                     {copiedCmd ? <Check className="w-4 h-4" style={{ color: 'var(--success)' }} /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
