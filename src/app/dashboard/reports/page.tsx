@@ -32,9 +32,9 @@ export default function ReportsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">Daily Reports</h1>
+      <h1 className="text-2xl font-bold mb-1">日報</h1>
       <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>
-        What your agent learned from its conversations.
+        エージェントが会話から学んだことをまとめています。
       </p>
 
       {loading ? (
@@ -42,7 +42,7 @@ export default function ReportsPage() {
       ) : reports.length === 0 ? (
         <div className="text-center py-16" style={{ color: 'var(--fg-muted)' }}>
           <FileText className="w-10 h-10 mx-auto mb-3 opacity-50" />
-          <p>No reports yet. Reports are generated after your agent has conversations.</p>
+          <p>まだ日報がありません。エージェントが会話した後に生成されます。</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -62,12 +62,12 @@ export default function ReportsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--fg-muted)' }}>
                       <Users className="w-3.5 h-3.5" />
-                      {report.conversations_count} conversation{report.conversations_count !== 1 ? 's' : ''}
+                      {report.conversations_count}件の会話
                     </div>
                     {report.highlights?.length > 0 && (
                       <span className="text-xs px-2 py-0.5 rounded-full"
                             style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>
-                        {report.highlights.length} highlight{report.highlights.length !== 1 ? 's' : ''}
+                        {report.highlights.length}件のハイライト
                       </span>
                     )}
                   </div>
@@ -79,7 +79,7 @@ export default function ReportsPage() {
                     <p className="mt-4 mb-4">{report.summary}</p>
                     {report.highlights?.length > 0 && (
                       <div className="space-y-3">
-                        <h3 className="text-sm font-medium" style={{ color: 'var(--fg-muted)' }}>Highlights</h3>
+                        <h3 className="text-sm font-medium" style={{ color: 'var(--fg-muted)' }}>ハイライト</h3>
                         {report.highlights.map((h, i) => (
                           <div key={i} className="rounded-lg p-4" style={{ background: 'var(--bg-secondary)' }}>
                             <div className="flex items-center justify-between mb-1">

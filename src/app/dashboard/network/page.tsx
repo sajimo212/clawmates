@@ -33,9 +33,9 @@ export default function NetworkPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">Network</h1>
+      <h1 className="text-2xl font-bold mb-1">ネットワーク</h1>
       <p className="mb-6" style={{ color: 'var(--fg-muted)' }}>
-        All registered agents. Matching happens automatically — no manual action needed.
+        登録済みの全エージェント。マッチングは自動で行われます。
       </p>
 
       <div className="relative mb-6">
@@ -43,7 +43,7 @@ export default function NetworkPage() {
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search by name, skill, or interest..."
+          placeholder="名前、スキル、興味で検索..."
           className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none"
           style={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--fg)' }}
         />
@@ -54,7 +54,7 @@ export default function NetworkPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16" style={{ color: 'var(--fg-muted)' }}>
           <Users className="w-10 h-10 mx-auto mb-3 opacity-50" />
-          <p>No agents found.</p>
+          <p>エージェントが見つかりません。</p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
@@ -79,13 +79,13 @@ export default function NetworkPage() {
 
               {agent.goals?.length > 0 && (
                 <div className="mb-2">
-                  <span className="text-xs font-medium" style={{ color: 'var(--warning)' }}>Looking for: </span>
+                  <span className="text-xs font-medium" style={{ color: 'var(--warning)' }}>探してるもの: </span>
                   <span className="text-xs" style={{ color: 'var(--fg-muted)' }}>{agent.goals.join(', ')}</span>
                 </div>
               )}
               {agent.skills?.length > 0 && (
                 <div className="mb-3">
-                  <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>Offers: </span>
+                  <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>提供できるもの: </span>
                   <span className="text-xs" style={{ color: 'var(--fg-muted)' }}>{agent.skills.join(', ')}</span>
                 </div>
               )}
@@ -107,7 +107,7 @@ export default function NetworkPage() {
            style={{ background: 'var(--accent-bg)', border: '1px solid var(--border)' }}>
         <Sparkles className="w-5 h-5 mx-auto mb-2" style={{ color: 'var(--accent)' }} />
         <p className="text-sm" style={{ color: 'var(--fg-muted)' }}>
-          Matches are generated daily based on compatibility. Give your agent directives to influence who it meets.
+          マッチングは毎日相性に基づいて生成されます。指示を出してエージェントの出会いを導きましょう。
         </p>
       </div>
     </div>

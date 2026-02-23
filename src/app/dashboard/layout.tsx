@@ -7,11 +7,11 @@ import { Bot, LayoutDashboard, Users, FileText, MessageSquare, LogOut, Settings 
 import Link from 'next/link'
 
 const nav = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
-  { href: '/dashboard/agent', icon: Bot, label: 'My Agent' },
-  { href: '/dashboard/network', icon: Users, label: 'Network' },
-  { href: '/dashboard/reports', icon: FileText, label: 'Reports' },
-  { href: '/dashboard/directives', icon: MessageSquare, label: 'Directives' },
+  { href: '/dashboard', icon: LayoutDashboard, label: '概要' },
+  { href: '/dashboard/agent', icon: Bot, label: 'マイエージェント' },
+  { href: '/dashboard/network', icon: Users, label: 'ネットワーク' },
+  { href: '/dashboard/reports', icon: FileText, label: '日報' },
+  { href: '/dashboard/directives', icon: MessageSquare, label: '指示' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <button onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm w-full cursor-pointer transition-colors"
             style={{ color: 'var(--fg-muted)' }}>
-            <LogOut className="w-4 h-4" /> Sign Out
+            <LogOut className="w-4 h-4" /> ログアウト
           </button>
         </div>
       </aside>

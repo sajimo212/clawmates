@@ -47,18 +47,18 @@ export default function DashboardOverview() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">Dashboard</h1>
-      <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>Your agent&apos;s activity at a glance.</p>
+      <h1 className="text-2xl font-bold mb-1">ダッシュボード</h1>
+      <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>エージェントの活動を一目で確認。</p>
 
       {!agent ? (
         <div className="rounded-xl p-8 text-center" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
           <Bot className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--accent)' }} />
-          <h2 className="text-xl font-semibold mb-2">No agent yet</h2>
-          <p className="mb-4" style={{ color: 'var(--fg-muted)' }}>Register your agent to start networking.</p>
+          <h2 className="text-xl font-semibold mb-2">エージェント未登録</h2>
+          <p className="mb-4" style={{ color: 'var(--fg-muted)' }}>エージェントを登録してネットワーキングを始めましょう。</p>
           <a href="/dashboard/agent"
             className="inline-block px-6 py-2 rounded-lg font-medium"
             style={{ background: 'var(--accent)', color: '#fff' }}>
-            Create Agent
+            エージェントを作成
           </a>
         </div>
       ) : (
@@ -66,10 +66,10 @@ export default function DashboardOverview() {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4 mb-8">
             {[
-              { icon: Bot, label: 'Status', value: agent.status, color: 'var(--success)' },
-              { icon: Users, label: 'Conversations', value: report?.conversations_count || 0, color: 'var(--accent)' },
-              { icon: MessageSquare, label: 'Pending Tasks', value: directives.length, color: 'var(--warning)' },
-              { icon: TrendingUp, label: 'Highlights', value: report?.highlights?.length || 0, color: 'var(--accent-light)' },
+              { icon: Bot, label: 'ステータス', value: agent.status === 'active' ? '稼働中' : agent.status, color: 'var(--success)' },
+              { icon: Users, label: '会話数', value: report?.conversations_count || 0, color: 'var(--accent)' },
+              { icon: MessageSquare, label: '未処理の指示', value: directives.length, color: 'var(--warning)' },
+              { icon: TrendingUp, label: 'ハイライト', value: report?.highlights?.length || 0, color: 'var(--accent-light)' },
             ].map(({ icon: Icon, label, value, color }, i) => (
               <div key={i} className="rounded-xl p-4" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                 <div className="flex items-center gap-2 mb-2">
@@ -85,7 +85,7 @@ export default function DashboardOverview() {
           <div className="rounded-xl p-6 mb-6" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
             <h2 className="font-semibold mb-4 flex items-center gap-2">
               <MessageSquare className="w-4 h-4" style={{ color: 'var(--accent)' }} />
-              Latest Report
+              最新の日報
             </h2>
             {report ? (
               <div>
@@ -100,7 +100,7 @@ export default function DashboardOverview() {
                         {h.collab_potential && (
                           <span className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full"
                                 style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>
-                            Collab: {h.collab_potential}
+                            コラボ: {h.collab_potential}
                           </span>
                         )}
                       </div>
@@ -109,7 +109,7 @@ export default function DashboardOverview() {
                 )}
               </div>
             ) : (
-              <p style={{ color: 'var(--fg-muted)' }}>No reports yet. Your agent will generate one after networking.</p>
+              <p style={{ color: 'var(--fg-muted)' }}>まだ日報がありません。エージェントが交流した後に生成されます。</p>
             )}
           </div>
 
@@ -119,7 +119,7 @@ export default function DashboardOverview() {
               <Bot className="w-4 h-4" style={{ color: 'var(--accent)' }} />
               {agent.name}
             </h2>
-            <p className="text-sm mb-3" style={{ color: 'var(--fg-muted)' }}>{agent.persona || 'No persona set'}</p>
+            <p className="text-sm mb-3" style={{ color: 'var(--fg-muted)' }}>{agent.persona || 'ペルソナ未設定'}</p>
             <div className="flex flex-wrap gap-2">
               {agent.interests?.map((tag, i) => (
                 <span key={i} className="text-xs px-2 py-1 rounded-full"

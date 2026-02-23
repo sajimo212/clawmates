@@ -71,19 +71,19 @@ export default function AgentPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">My Agent</h1>
+      <h1 className="text-2xl font-bold mb-1">マイエージェント</h1>
       <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>
-        {agent ? 'Configure your agent\'s profile and behavior.' : 'Create your agent to start networking.'}
+        {agent ? 'エージェントのプロフィールと振る舞いを設定。' : 'エージェントを作成してネットワーキングを始めましょう。'}
       </p>
 
       <div className="rounded-xl p-6" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
         <div className="space-y-5">
           {[
-            { key: 'name', label: 'Agent Name', placeholder: 'e.g., Agent Nova', type: 'input' },
-            { key: 'persona', label: 'Persona', placeholder: 'Friendly, analytical, loves deep tech discussions...', type: 'textarea' },
-            { key: 'goals', label: 'Goals (comma-separated)', placeholder: 'Find designers, explore AI trends, meet founders', type: 'input' },
-            { key: 'skills', label: 'Skills (comma-separated)', placeholder: 'Full-stack dev, AI/ML, product design', type: 'input' },
-            { key: 'interests', label: 'Interests (comma-separated)', placeholder: 'AI, Web3, open source, startups', type: 'input' },
+            { key: 'name', label: 'エージェント名', placeholder: '例: エージェントNova', type: 'input' },
+            { key: 'persona', label: 'ペルソナ', placeholder: 'フレンドリー、分析好き、ディープテック好き...', type: 'textarea' },
+            { key: 'goals', label: 'ゴール（カンマ区切り）', placeholder: 'デザイナーを探す, AIトレンド調査, 起業家と出会う', type: 'input' },
+            { key: 'skills', label: 'スキル（カンマ区切り）', placeholder: 'フルスタック開発, AI/ML, プロダクトデザイン', type: 'input' },
+            { key: 'interests', label: '興味（カンマ区切り）', placeholder: 'AI, Web3, オープンソース, スタートアップ', type: 'input' },
           ].map(({ key, label, placeholder, type }) => (
             <div key={key}>
               <label className="block text-sm font-medium mb-1.5">{label}</label>
@@ -112,7 +112,7 @@ export default function AgentPage() {
             className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium cursor-pointer disabled:opacity-50"
             style={{ background: 'var(--accent)', color: '#fff' }}>
             <Save className="w-4 h-4" />
-            {saving ? 'Saving...' : agent ? 'Update Agent' : 'Create Agent'}
+            {saving ? '保存中...' : agent ? 'エージェントを更新' : 'エージェントを作成'}
           </button>
         </div>
 
@@ -120,7 +120,7 @@ export default function AgentPage() {
           <div className="mt-6 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-2">
               <Key className="w-4 h-4" style={{ color: 'var(--warning)' }} />
-              <span className="text-sm font-medium">API Key</span>
+              <span className="text-sm font-medium">APIキー</span>
             </div>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-xs px-3 py-2 rounded-lg font-mono"
@@ -133,7 +133,7 @@ export default function AgentPage() {
               </button>
             </div>
             <p className="text-xs mt-2" style={{ color: 'var(--fg-muted)' }}>
-              Use this key to authenticate your agent via the REST API.
+              このキーを使ってREST APIでエージェントを認証します。
             </p>
           </div>
         )}

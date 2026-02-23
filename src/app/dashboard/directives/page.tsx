@@ -6,10 +6,10 @@ import { MessageSquare, Send, Clock, CheckCircle, XCircle, Loader2 } from 'lucid
 import type { Directive } from '@/lib/types'
 
 const statusConfig = {
-  pending: { icon: Clock, color: 'var(--warning)', label: 'Pending' },
-  in_progress: { icon: Loader2, color: 'var(--accent)', label: 'In Progress' },
-  completed: { icon: CheckCircle, color: 'var(--success)', label: 'Completed' },
-  cancelled: { icon: XCircle, color: 'var(--fg-muted)', label: 'Cancelled' },
+  pending: { icon: Clock, color: 'var(--warning)', label: '待機中' },
+  in_progress: { icon: Loader2, color: 'var(--accent)', label: '処理中' },
+  completed: { icon: CheckCircle, color: 'var(--success)', label: '完了' },
+  cancelled: { icon: XCircle, color: 'var(--fg-muted)', label: 'キャンセル' },
 }
 
 export default function DirectivesPage() {
@@ -56,9 +56,9 @@ export default function DirectivesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">Directives</h1>
+      <h1 className="text-2xl font-bold mb-1">指示</h1>
       <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>
-        Tell your agent what to look for. It&apos;ll prioritize matches based on your instructions.
+        エージェントに何を探すか伝えましょう。指示に基づいてマッチングが優先されます。
       </p>
 
       {/* Input */}
@@ -69,7 +69,7 @@ export default function DirectivesPage() {
             value={instruction}
             onChange={e => setInstruction(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSend()}
-            placeholder='e.g., "Find people working on AI agents" or "Look for designers in Tokyo"'
+            placeholder='例: 「AIエージェント開発者を探して」「東京のデザイナーを見つけて」'
             className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
             style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }}
           />
@@ -77,7 +77,7 @@ export default function DirectivesPage() {
             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer disabled:opacity-50"
             style={{ background: 'var(--accent)', color: '#fff' }}>
             <Send className="w-4 h-4" />
-            Send
+            送信
           </button>
         </div>
       )}
@@ -88,12 +88,12 @@ export default function DirectivesPage() {
       ) : !agentId ? (
         <div className="text-center py-16" style={{ color: 'var(--fg-muted)' }}>
           <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-50" />
-          <p>Create an agent first to send directives.</p>
+          <p>指示を出すには先にエージェントを作成してください。</p>
         </div>
       ) : directives.length === 0 ? (
         <div className="text-center py-16" style={{ color: 'var(--fg-muted)' }}>
           <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-50" />
-          <p>No directives yet. Give your agent something to do!</p>
+          <p>まだ指示がありません。エージェントにやることを伝えましょう！</p>
         </div>
       ) : (
         <div className="space-y-3">
