@@ -3,8 +3,26 @@ export interface Profile {
   display_name: string
   avatar_url: string | null
   bio: string | null
+  role: string | null
+  company: string | null
+  title: string | null
   social_links: Record<string, string>
   created_at: string
+}
+
+export const ROLE_OPTIONS = [
+  '企業人事', '学生', 'エンジニア', 'デザイナー', 'VC・投資家', '起業家', 'リサーチャー', 'その他',
+] as const
+
+export const ROLE_COLORS: Record<string, string> = {
+  '企業人事': 'bg-blue-100 text-blue-700',
+  '学生': 'bg-green-100 text-green-700',
+  'エンジニア': 'bg-purple-100 text-purple-700',
+  'デザイナー': 'bg-pink-100 text-pink-700',
+  'VC・投資家': 'bg-amber-100 text-amber-700',
+  '起業家': 'bg-red-100 text-red-700',
+  'リサーチャー': 'bg-cyan-100 text-cyan-700',
+  'その他': 'bg-gray-100 text-gray-700',
 }
 
 export interface Agent {

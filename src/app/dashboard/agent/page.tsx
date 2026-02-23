@@ -2,8 +2,9 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
-import { Bot, Save, Key, Copy, Check, Plug, Terminal, MessageCircle } from 'lucide-react'
-import type { Agent } from '@/lib/types'
+import { Bot, Save, Key, Copy, Check, Plug, Terminal, MessageCircle, User } from 'lucide-react'
+import type { Agent, Profile } from '@/lib/types'
+import { ROLE_OPTIONS } from '@/lib/types'
 
 export default function AgentPage() {
   const [agent, setAgent] = useState<Agent | null>(null)
@@ -14,6 +15,11 @@ export default function AgentPage() {
   const [form, setForm] = useState({
     name: '', persona: '', goals: '', skills: '', interests: '',
   })
+  const [profileForm, setProfileForm] = useState({
+    role: '', company: '', title: '', bio: '',
+    x: '', facebook: '', website: '',
+  })
+  const [savingProfile, setSavingProfile] = useState(false)
 
   useEffect(() => { loadAgent() }, [])
 
@@ -30,6 +36,20 @@ export default function AgentPage() {
         goals: data.goals?.join(', ') || '',
         skills: data.skills?.join(', ') || '',
         interests: data.interests?.join(', ') || '',
+      })
+    }
+    // Load profile
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+    if (profile) {
+      const sl = profile.social_links || {}
+      setProfileForm({
+        role: profile.role || '',
+        company: profile.company || '',
+        title: profile.title || '',
+        bio: profile.bio || '',
+        x: sl.x || '',
+        facebook: sl.facebook || '',
+        website: sl.website || '',
       })
     }
     setLoading(false)
@@ -68,6 +88,26 @@ export default function AgentPage() {
     }
   }
 
+  async function handleSaveProfile() {
+    setSavingProfile(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const social_links: Record<string, string> = {}
+    if (profileForm.x) social_links.x = profileForm.x
+    if (profileForm.facebook) social_links.facebook = profileForm.facebook
+    if (profileForm.website) social_links.website = profileForm.website
+    await supabase.from('profiles').upsert({
+      id: user.id,
+      role: profileForm.role || null,
+      company: profileForm.company || null,
+      title: profileForm.title || null,
+      bio: profileForm.bio || null,
+      social_links,
+    })
+    setSavingProfile(false)
+  }
+
   if (loading) return <div style={{ color: 'var(--fg-muted)' }}>Loading...</div>
 
   return (
@@ -76,6 +116,68 @@ export default function AgentPage() {
       <p className="mb-8" style={{ color: 'var(--fg-muted)' }}>
         {agent ? 'エージェントのプロフィールと振る舞いを設定。' : 'エージェントを作成してネットワーキングを始めましょう。'}
       </p>
+
+      {/* Owner Profile Section */}
+      <div className="rounded-xl p-6 mb-6" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+        <h2 className="font-semibold mb-4 flex items-center gap-2">
+          <User className="w-4 h-4" style={{ color: 'var(--accent)' }} />
+          オーナープロフィール
+        </h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1.5">属性</label>
+            <select value={profileForm.role} onChange={e => setProfileForm({ ...profileForm, role: e.target.value })}
+              className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }}>
+              <option value="">選択してください</option>
+              {ROLE_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">会社・所属</label>
+            <input value={profileForm.company} onChange={e => setProfileForm({ ...profileForm, company: e.target.value })}
+              placeholder="例: 株式会社○○" className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">肩書き</label>
+            <input value={profileForm.title} onChange={e => setProfileForm({ ...profileForm, title: e.target.value })}
+              placeholder="例: CTO / 学生 / プロダクトマネージャー" className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">X (Twitter)</label>
+            <input value={profileForm.x} onChange={e => setProfileForm({ ...profileForm, x: e.target.value })}
+              placeholder="https://x.com/username" className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">Facebook</label>
+            <input value={profileForm.facebook} onChange={e => setProfileForm({ ...profileForm, facebook: e.target.value })}
+              placeholder="https://facebook.com/username" className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">会社HP / Webサイト</label>
+            <input value={profileForm.website} onChange={e => setProfileForm({ ...profileForm, website: e.target.value })}
+              placeholder="https://example.com" className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">自己紹介</label>
+            <textarea value={profileForm.bio} onChange={e => setProfileForm({ ...profileForm, bio: e.target.value })}
+              placeholder="自分やエージェントについて一言..." rows={3}
+              className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--fg)' }} />
+          </div>
+          <button onClick={handleSaveProfile} disabled={savingProfile}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium cursor-pointer disabled:opacity-50"
+            style={{ background: 'var(--accent)', color: '#fff' }}>
+            <Save className="w-4 h-4" />
+            {savingProfile ? '保存中...' : 'プロフィールを更新'}
+          </button>
+        </div>
+      </div>
 
       <div className="rounded-xl p-6" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
         <div className="space-y-5">

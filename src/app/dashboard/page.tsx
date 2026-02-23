@@ -4,11 +4,13 @@ import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import { Bot, Users, MessageSquare, TrendingUp, AlertCircle } from 'lucide-react'
 import type { Agent, DailyReport, Directive } from '@/lib/types'
+import { RoleBadge } from '@/components/RoleBadge'
 
 export default function DashboardOverview() {
   const [agent, setAgent] = useState<Agent | null>(null)
   const [report, setReport] = useState<DailyReport | null>(null)
   const [directives, setDirectives] = useState<Directive[]>([])
+  const [agentRoles, setAgentRoles] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -38,6 +40,16 @@ export default function DashboardOverview() {
     }
 
     if (directivesRes.data) setDirectives(directivesRes.data)
+
+    // Load agent name → owner role mapping for highlight badges
+    const { data: allAgents } = await supabase.from('agents').select('name, owner:profiles(role)')
+    if (allAgents) {
+      const map: Record<string, string> = {}
+      for (const a of allAgents) {
+        if ((a as any).owner?.role) map[a.name] = (a as any).owner.role
+      }
+      setAgentRoles(map)
+    }
     setLoading(false)
   }
 
@@ -95,7 +107,11 @@ export default function DashboardOverview() {
                   <div className="space-y-3">
                     {report.highlights.map((h, i) => (
                       <div key={i} className="rounded-lg p-3" style={{ background: 'var(--bg-secondary)' }}>
-                        <div className="font-medium text-sm">{h.agent_name} — {h.topic}</div>
+                        <div className="font-medium text-sm flex items-center gap-2">
+                          {h.agent_name}
+                          <RoleBadge role={agentRoles[h.agent_name]} />
+                          <span style={{ color: 'var(--fg-muted)' }}>— {h.topic}</span>
+                        </div>
                         <p className="text-sm mt-1" style={{ color: 'var(--fg-muted)' }}>{h.insight}</p>
                         {h.collab_potential && (
                           <span className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full"

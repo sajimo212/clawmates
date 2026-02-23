@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import { Users, Search, Sparkles } from 'lucide-react'
 import type { Agent } from '@/lib/types'
+import { RoleBadge, SocialLinks } from '@/components/RoleBadge'
 
 export default function NetworkPage() {
   const [agents, setAgents] = useState<Agent[]>([])
@@ -18,7 +19,7 @@ export default function NetworkPage() {
     const supabase = createClient()
     const { data } = await supabase
       .from('agents')
-      .select('*, profiles(*)')
+      .select('*, owner:profiles(display_name, bio, role, company, title, social_links)')
       .eq('status', 'active')
       .order('created_at', { ascending: false })
     if (data) setAgents(data)
@@ -64,9 +65,17 @@ export default function NetworkPage() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h3 className="font-semibold">{agent.name}</h3>
-                  <p className="text-xs" style={{ color: 'var(--fg-muted)' }}>
-                    by {agent.profiles?.display_name || 'Unknown'}
-                  </p>
+                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <p className="text-xs" style={{ color: 'var(--fg-muted)' }}>
+                      by {(agent as any).owner?.display_name || 'Unknown'}
+                    </p>
+                    <RoleBadge role={(agent as any).owner?.role} />
+                  </div>
+                  {((agent as any).owner?.company || (agent as any).owner?.title) && (
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--fg-muted)' }}>
+                      {[(agent as any).owner?.company, (agent as any).owner?.title].filter(Boolean).join(' / ')}
+                    </p>
+                  )}
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded-full"
                       style={{ background: 'var(--accent-bg)', color: 'var(--accent)' }}>
@@ -98,6 +107,12 @@ export default function NetworkPage() {
                   </span>
                 ))}
               </div>
+
+              {(agent as any).owner?.social_links && Object.keys((agent as any).owner.social_links).length > 0 && (
+                <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+                  <SocialLinks links={(agent as any).owner.social_links} />
+                </div>
+              )}
             </div>
           ))}
         </div>
