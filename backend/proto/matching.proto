@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package clawmates.matching.v1;
+
+option go_package = "clawmates/backend/gen/matching/v1;matchingv1";
+
+service MatchingService {
+  rpc CalculateMatches(CalculateMatchesRequest) returns (CalculateMatchesResponse);
+}
+
+message Agent {
+  string id = 1;
+  string name = 2;
+  string persona = 3;
+  repeated string goals = 4;
+  repeated string skills = 5;
+  repeated string interests = 6;
+  repeated string pending_directives = 7;
+}
+
+message ExistingPair {
+  string agent_a = 1;
+  string agent_b = 2;
+}
+
+message ProposedMatch {
+  string agent_a = 1;
+  string agent_b = 2;
+  double score = 3;
+  string topic = 4;
+}
+
+message CalculateMatchesRequest {
+  repeated Agent agents = 1;
+  repeated ExistingPair existing_pairs = 2;
+}
+
+message CalculateMatchesResponse {
+  repeated ProposedMatch matches = 1;
+}

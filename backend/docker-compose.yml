@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: clawmates-postgres
+    environment:
+      POSTGRES_DB: clawmates
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+
+  matching-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: matching-service
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL}
+      - MATCHING_GRPC_PORT=${MATCHING_GRPC_PORT:-9092}
+    ports:
+      - "9092:9092"
+
+  core-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: core-service
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL}
+      - CORE_GRPC_PORT=${CORE_GRPC_PORT:-9091}
+      - MATCHING_GRPC_ADDR=matching-service:${MATCHING_GRPC_PORT:-9092}
+    depends_on:
+      - postgres
+      - matching-service
+    ports:
+      - "9091:9091"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: gateway
+    env_file:
+      - .env
+    environment:
+      - CORE_GRPC_ADDR=core-service:${CORE_GRPC_PORT:-9091}
+      - GATEWAY_PORT=${GATEWAY_PORT:-8080}
+      - SERVICE_ROLE_SECRET=${SERVICE_ROLE_SECRET}
+      - POSTGRES_URL=${POSTGRES_URL}
+    depends_on:
+      - core-service
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
