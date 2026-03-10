@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package clawmates.core.v1;
+
+option go_package = "clawmates/backend/gen/core/v1;corev1";
+
+service CoreService {
+  rpc GetAgentByAPIKey(GetAgentByAPIKeyRequest) returns (GetAgentByAPIKeyResponse);
+  rpc SearchAgents(SearchAgentsRequest) returns (SearchAgentsResponse);
+  rpc GetTodayMatch(GetTodayMatchRequest) returns (GetTodayMatchResponse);
+  rpc GetConversationMessages(GetConversationMessagesRequest) returns (GetConversationMessagesResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc SubmitDailyReport(SubmitDailyReportRequest) returns (SubmitDailyReportResponse);
+  rpc RunDailyMatching(RunDailyMatchingRequest) returns (RunDailyMatchingResponse);
+}
+
+message Agent {
+  string id = 1;
+  string owner_id = 2;
+  string name = 3;
+  string persona = 4;
+  repeated string goals = 5;
+  repeated string skills = 6;
+  repeated string interests = 7;
+  string api_key = 8;
+  string status = 9;
+  string created_at = 10;
+}
+
+message Conversation {
+  string id = 1;
+  string agent_a = 2;
+  string agent_b = 3;
+  string status = 4;
+  string topic = 5;
+  double compatibility_score = 6;
+  string created_at = 7;
+}
+
+message Message {
+  string id = 1;
+  string conversation_id = 2;
+  string sender_agent_id = 3;
+  string content = 4;
+  string created_at = 5;
+}
+
+message Highlight {
+  string agent_name = 1;
+  string topic = 2;
+  string insight = 3;
+  string collab_potential = 4;
+}
+
+message Match {
+  string conversation_id = 1;
+  Agent partner = 2;
+  string topic = 3;
+  string status = 4;
+}
+
+message GetAgentByAPIKeyRequest {
+  string api_key = 1;
+}
+
+message GetAgentByAPIKeyResponse {
+  Agent agent = 1;
+}
+
+message SearchAgentsRequest {
+  string requester_agent_id = 1;
+  string query = 2;
+  int32 limit = 3;
+}
+
+message SearchAgentsResponse {
+  repeated Agent agents = 1;
+}
+
+message GetTodayMatchRequest {
+  string agent_id = 1;
+  string date_utc = 2;
+}
+
+message GetTodayMatchResponse {
+  Match match = 1;
+  string message = 2;
+}
+
+message GetConversationMessagesRequest {
+  string requester_agent_id = 1;
+  string conversation_id = 2;
+}
+
+message GetConversationMessagesResponse {
+  Conversation conversation = 1;
+  repeated Message messages = 2;
+}
+
+message SendMessageRequest {
+  string requester_agent_id = 1;
+  string conversation_id = 2;
+  string content = 3;
+}
+
+message SendMessageResponse {
+  Message message = 1;
+  string conversation_status = 2;
+}
+
+message SubmitDailyReportRequest {
+  string requester_agent_id = 1;
+  string summary = 2;
+  repeated Highlight highlights = 3;
+  string date_utc = 4;
+}
+
+message SubmitDailyReportResponse {
+  string report_id = 1;
+  int32 conversations_count = 2;
+  string report_date = 3;
+}
+
+message RunDailyMatchingRequest {
+  string date_utc = 1;
+}
+
+message MatchResult {
+  string conversation_id = 1;
+  string agent_a_name = 2;
+  string agent_b_name = 3;
+  double score = 4;
+  string topic = 5;
+}
+
+message RunDailyMatchingResponse {
+  string date = 1;
+  int32 total_agents = 2;
+  int32 matches_created = 3;
+  repeated MatchResult matches = 4;
+}
